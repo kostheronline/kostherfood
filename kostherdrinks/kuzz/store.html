@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Tienda online kuzz — Infusiones Naturales. Pide tus botellas de 1 Litro y realiza tu pedido directo por WhatsApp." />
+  <meta name="theme-color" content="#0C5C38" />
+  <title>Tienda kuzz — Infusiones Naturales | Pedido por WhatsApp</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="brand/favicon.png" />
+  <link rel="apple-touch-icon" href="brand/favicon.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'kuzz-verde': '#0C5C38',
+            'kuzz-naranja': '#E05A10',
+            'kuzz-crema': '#F5EFEB',
+            'kuzz-negro': '#121212',
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-editorial { font-family: 'Fraunces', serif; }
+
+    /* Drawer animation */
+    .drawer-overlay { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    .drawer-overlay.open { opacity: 1; pointer-events: auto; }
+    .drawer-panel { transform: translateX(100%); transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1); }
+    .drawer-panel.open { transform: translateX(0); }
+
+    /* Mobile menu */
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.35s ease-out; }
+    .mobile-menu.open { max-height: 500px; }
+
+    /* Toast */
+    .toast { transform: translateY(120%); transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .toast.show { transform: translateY(0); }
+
+    /* Confirmation overlay */
+    .confirm-overlay { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    .confirm-overlay.open { opacity: 1; pointer-events: auto; }
+    .confirm-panel { transform: scale(0.95); transition: transform 0.3s ease; }
+    .confirm-overlay.open .confirm-panel { transform: scale(1); }
+
+    /* Modal datos */
+    .modal-overlay { opacity: 0; transition: opacity 0.3s ease; pointer-events: none; }
+    .modal-overlay.open { opacity: 1; pointer-events: auto; }
+    .modal-panel { transform: translateY(20px); transition: transform 0.3s ease; }
+    .modal-overlay.open .modal-panel { transform: translateY(0); }
+
+    /* Cart bump animation */
+    @keyframes bump { 0%,100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+    .bump { animation: bump 0.3s ease; }
+
+    /* Added flash */
+    @keyframes flashCheck { 0% { transform: scale(0); opacity: 0; } 60% { transform: scale(1.15); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
+    .added-flash { animation: flashCheck 0.35s ease forwards; }
+  </style>
+</head>
+
+<body class="bg-kuzz-crema text-kuzz-negro antialiased">
+
+  <!-- ====================== HEADER STICKY ====================== -->
+  <header id="header" class="sticky top-0 z-40 bg-kuzz-verde text-white shadow-lg shadow-kuzz-verde/20">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center shrink-0">
+          <img src="brand/logo-claro.png" alt="kuzz - Infusiones Naturales" class="h-10 w-auto object-contain" />
+        </a>
+
+        <!-- Desktop nav -->
+        <div class="hidden lg:flex items-center gap-2">
+          <a href="index.html" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white/90 hover:bg-white/10 text-sm font-semibold transition-colors">
+            <i data-lucide="home" class="w-4 h-4"></i>
+            <span>Inicio</span>
+          </a>
+          <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white/90 hover:bg-white/10 text-sm font-semibold transition-colors">
+            <i data-fb-icon class="w-4 h-4"></i>
+            <span>Facebook</span>
+          </a>
+          <button id="btnMisDatos" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-white/90 hover:bg-white/10 text-sm font-semibold transition-colors">
+            <i data-lucide="user-cog" class="w-4 h-4"></i>
+            <span>Mis Datos</span>
+          </button>
+        </div>
+
+        <!-- Cart button -->
+        <button id="btnCart" class="relative inline-flex items-center gap-2 px-4 sm:px-5 py-2.5 sm:py-3 rounded-full bg-kuzz-naranja text-white text-sm font-bold shadow-lg shadow-kuzz-naranja/30 hover:bg-kuzz-naranja/90 transition-colors">
+          <i data-lucide="shopping-cart" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+          <span class="hidden sm:inline">Carrito</span>
+          <span id="cartCount" class="ml-0.5 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-white text-kuzz-naranja text-xs font-extrabold">0</span>
+        </button>
+
+        <!-- Mobile menu button -->
+        <button id="menuBtn" class="lg:hidden p-2 -mr-2 text-white" aria-label="Abrir menú" aria-expanded="false">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobileMenu" class="mobile-menu lg:hidden">
+        <div class="py-3 space-y-1 border-t border-white/10">
+          <a href="index.html" class="flex items-center gap-3 px-2 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 rounded-lg">
+            <i data-lucide="home" class="w-4 h-4"></i><span>Inicio</span>
+          </a>
+          <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+             class="flex items-center gap-3 px-2 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 rounded-lg">
+            <i data-fb-icon class="w-4 h-4"></i><span>Facebook</span>
+          </a>
+          <button id="btnMisDatosMobile" class="w-full flex items-center gap-3 px-2 py-3 text-sm font-semibold text-white/90 hover:bg-white/10 rounded-lg text-left">
+            <i data-lucide="user-cog" class="w-4 h-4"></i><span>Mis Datos</span>
+          </button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ====================== BANNER SUPERIOR RESPONSIVE ====================== -->
+  <section class="w-full">
+    <picture>
+      <source media="(min-width: 768px)" srcset="brand/1d.jpg" />
+      <img src="brand/1m.jpg" alt="kuzz — Tienda de Infusiones Naturales" class="w-full h-auto block" />
+    </picture>
+  </section>
+
+  <!-- ====================== TÍTULO DE TIENDA ====================== -->
+  <section class="bg-kuzz-crema">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12 text-center">
+      <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-kuzz-verde/10 text-kuzz-verde text-xs font-bold uppercase tracking-widest">
+        <i data-lucide="shopping-bag" class="w-3.5 h-3.5"></i>
+        Tienda Online
+      </span>
+      <h1 class="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-black text-kuzz-negro mt-4">
+        Nuestras infusiones de 1 Litro
+      </h1>
+      <p class="mt-3 text-sm sm:text-base text-kuzz-negro/70 font-medium max-w-xl mx-auto">
+        Arma tu pedido, completa tus datos y envíalo directo por WhatsApp. Listo para disfrutar bien helado.
+      </p>
+    </div>
+  </section>
+
+  <!-- ====================== CATÁLOGO DE COMPRA ====================== -->
+  <main class="pb-24 sm:pb-32 bg-kuzz-crema">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6">
+        <!-- Products rendered by JS -->
+      </div>
+    </div>
+  </main>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="bg-kuzz-negro text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-12">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+        <div>
+          <img src="brand/logo-claro.png" alt="kuzz - Infusiones Naturales" class="h-10 w-auto object-contain" />
+          <p class="mt-3 text-sm text-white/60 max-w-md">
+            kuzz — Infusiones Naturales. Producto Peruano. Bebidas artesanales de 1 Litro.
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-3">
+          <a href="index.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 text-white text-sm font-semibold hover:bg-white/20 transition-colors">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Volver al Inicio</span>
+          </a>
+          <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-colors">
+            <i data-fb-icon class="w-4 h-4"></i>
+            <span>Facebook</span>
+          </a>
+        </div>
+      </div>
+      <div class="mt-8 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-white/40">© 2026 kuzz — Infusiones Naturales. Producto Peruano.</p>
+        <p class="text-xs text-white/40">Pedidos por WhatsApp: +51 933 844 790</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====================== DRAWER CARRITO + REGISTRO ====================== -->
+  <div id="cartDrawer" class="fixed inset-0 z-50 hidden">
+    <!-- Overlay -->
+    <div id="cartOverlay" class="drawer-overlay absolute inset-0 bg-kuzz-negro/60 backdrop-blur-sm"></div>
+
+    <!-- Panel -->
+    <aside id="cartPanel" class="drawer-panel absolute right-0 top-0 h-full w-full max-w-md bg-kuzz-crema shadow-2xl flex flex-col">
+      <!-- Header -->
+      <div class="flex items-center justify-between px-5 py-4 bg-kuzz-verde text-white">
+        <div class="flex items-center gap-2">
+          <i data-lucide="shopping-cart" class="w-5 h-5"></i>
+          <h2 class="text-base font-extrabold">Tu Pedido</h2>
+        </div>
+        <button id="btnCloseCart" class="p-2 -mr-2 hover:bg-white/10 rounded-full transition-colors" aria-label="Cerrar carrito">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Cart items (scrollable) -->
+      <div id="cartItems" class="flex-1 overflow-y-auto px-5 py-4 space-y-3"></div>
+
+      <!-- Empty state -->
+      <div id="cartEmpty" class="flex-1 flex flex-col items-center justify-center px-6 py-12 text-center">
+        <div class="w-20 h-20 rounded-full bg-kuzz-verde/10 flex items-center justify-center mb-4">
+          <i data-lucide="shopping-cart" class="w-9 h-9 text-kuzz-verde"></i>
+        </div>
+        <h3 class="text-base font-extrabold text-kuzz-negro">Tu carrito está vacío</h3>
+        <p class="mt-1.5 text-xs text-kuzz-negro/60 max-w-xs">Agrega tus infusiones favoritas para empezar tu pedido por WhatsApp.</p>
+      </div>
+
+      <!-- Customer registration form (always visible when cart has items) -->
+      <div id="customerFormWrap" class="hidden border-t border-kuzz-negro/10 bg-white px-5 py-4">
+        <div class="flex items-center justify-between mb-3">
+          <h3 class="text-sm font-extrabold text-kuzz-negro flex items-center gap-2">
+            <i data-lucide="user" class="w-4 h-4 text-kuzz-verde"></i>
+            <span>Datos de Entrega</span>
+          </h3>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-kuzz-verde bg-kuzz-verde/10 px-2 py-1 rounded-full">Guardado</span>
+        </div>
+        <div class="space-y-3">
+          <div>
+            <label for="custName" class="block text-xs font-bold text-kuzz-negro/80 mb-1">
+              Nombre completo <span class="text-kuzz-naranja">*</span>
+            </label>
+            <input id="custName" type="text" placeholder="Ej. María Fernández"
+              class="w-full px-3 py-2.5 rounded-xl border border-kuzz-negro/15 bg-kuzz-crema text-sm font-medium text-kuzz-negro placeholder-kuzz-negro/30 focus:outline-none focus:border-kuzz-verde focus:ring-2 focus:ring-kuzz-verde/20 transition-all" />
+          </div>
+          <div>
+            <label for="custAddress" class="block text-xs font-bold text-kuzz-negro/80 mb-1">
+              Dirección de entrega <span class="text-kuzz-naranja">*</span>
+            </label>
+            <input id="custAddress" type="text" placeholder="Calle, manzana, lote, referencia"
+              class="w-full px-3 py-2.5 rounded-xl border border-kuzz-negro/15 bg-kuzz-crema text-sm font-medium text-kuzz-negro placeholder-kuzz-negro/30 focus:outline-none focus:border-kuzz-verde focus:ring-2 focus:ring-kuzz-verde/20 transition-all" />
+          </div>
+          <div>
+            <label for="custDni" class="block text-xs font-bold text-kuzz-negro/80 mb-1">
+              DNI <span class="text-kuzz-negro/40 font-medium">(Opcional — para acceder a promociones y beneficios)</span>
+            </label>
+            <input id="custDni" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="12345678"
+              class="w-full px-3 py-2.5 rounded-xl border border-kuzz-negro/15 bg-kuzz-crema text-sm font-medium text-kuzz-negro placeholder-kuzz-negro/30 focus:outline-none focus:border-kuzz-verde focus:ring-2 focus:ring-kuzz-verde/20 transition-all" />
+          </div>
+        </div>
+
+        <!-- Validation message -->
+        <div id="formAlert" class="hidden mt-3 px-3 py-2 rounded-xl bg-kuzz-naranja/10 border border-kuzz-naranja/30">
+          <p id="formAlertText" class="text-xs font-semibold text-kuzz-naranja"></p>
+        </div>
+      </div>
+
+      <!-- Footer summary -->
+      <div id="cartFooter" class="hidden border-t border-kuzz-negro/10 bg-white px-5 py-4 space-y-3">
+        <div class="flex items-center justify-between">
+          <span class="text-sm font-semibold text-kuzz-negro/70">Total a pagar</span>
+          <span id="cartTotal" class="text-xl font-extrabold text-kuzz-verde">S/ 0.00</span>
+        </div>
+        <button id="btnCheckout" class="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-full bg-kuzz-naranja text-white text-sm font-bold shadow-lg shadow-kuzz-naranja/30 hover:bg-kuzz-naranja/90 transition-colors">
+          <i data-lucide="message-circle" class="w-5 h-5"></i>
+          <span>Finalizar Pedido por WhatsApp</span>
+        </button>
+        <button id="btnClearCart" class="w-full text-xs font-semibold text-kuzz-negro/50 hover:text-kuzz-naranja transition-colors">
+          Vaciar carrito
+        </button>
+      </div>
+    </aside>
+  </div>
+
+  <!-- ====================== MODAL MIS DATOS ====================== -->
+  <div id="datosModal" class="fixed inset-0 z-50 hidden">
+    <div id="datosOverlay" class="modal-overlay absolute inset-0 bg-kuzz-negro/60 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="modal-panel relative w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden">
+        <div class="bg-kuzz-verde text-white px-5 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="user-cog" class="w-5 h-5"></i>
+            <h2 class="text-base font-extrabold">Mis Datos</h2>
+          </div>
+          <button id="btnCloseDatos" class="p-2 -mr-2 hover:bg-white/10 rounded-full transition-colors" aria-label="Cerrar">
+            <i data-lucide="x" class="w-5 h-5"></i>
+          </button>
+        </div>
+        <div class="p-5 space-y-3">
+          <p class="text-xs text-kuzz-negro/60 font-medium">Edita tus datos de entrega. Se guardan automáticamente en este dispositivo.</p>
+          <div>
+            <label class="block text-xs font-bold text-kuzz-negro/80 mb-1">Nombre completo <span class="text-kuzz-naranja">*</span></label>
+            <input id="modalName" type="text" placeholder="Ej. María Fernández"
+              class="w-full px-3 py-2.5 rounded-xl border border-kuzz-negro/15 bg-kuzz-crema text-sm font-medium focus:outline-none focus:border-kuzz-verde focus:ring-2 focus:ring-kuzz-verde/20 transition-all" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-kuzz-negro/80 mb-1">Dirección de entrega <span class="text-kuzz-naranja">*</span></label>
+            <input id="modalAddress" type="text" placeholder="Calle, manzana, lote, referencia"
+              class="w-full px-3 py-2.5 rounded-xl border border-kuzz-negro/15 bg-kuzz-crema text-sm font-medium focus:outline-none focus:border-kuzz-verde focus:ring-2 focus:ring-kuzz-verde/20 transition-all" />
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-kuzz-negro/80 mb-1">DNI <span class="text-kuzz-negro/40 font-medium">(Opcional — para promociones y beneficios)</span></label>
+            <input id="modalDni" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="8" placeholder="12345678"
+              class="w-full px-3 py-2.5 rounded-xl border border-kuzz-negro/15 bg-kuzz-crema text-sm font-medium focus:outline-none focus:border-kuzz-verde focus:ring-2 focus:ring-kuzz-verde/20 transition-all" />
+          </div>
+          <button id="btnSaveDatos" class="w-full mt-2 inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-kuzz-verde text-white text-sm font-bold hover:bg-kuzz-verde/90 transition-colors">
+            <i data-lucide="save" class="w-4 h-4"></i>
+            <span>Guardar Datos</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== CONFIRMACIÓN DE PEDIDO ENVIADO ====================== -->
+  <div id="confirmOverlay" class="confirm-overlay fixed inset-0 z-50 bg-kuzz-negro/70 backdrop-blur-sm hidden">
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="confirm-panel relative w-full max-w-sm bg-white rounded-3xl shadow-2xl overflow-hidden text-center">
+        <div class="bg-kuzz-verde px-6 py-8">
+          <div class="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center">
+            <i data-lucide="check" class="w-8 h-8 text-kuzz-verde"></i>
+          </div>
+        </div>
+        <div class="px-6 py-6">
+          <h3 class="font-serif-editorial text-2xl font-black text-kuzz-negro">¡Pedido enviado!</h3>
+          <p class="mt-2 text-sm text-kuzz-negro/70 font-medium">
+            Te redirigimos a WhatsApp para confirmar tu pedido con el equipo de kuzz. Gracias por elegir infusiones naturales.
+          </p>
+          <button id="btnNewOrder" class="mt-5 w-full inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-kuzz-naranja text-white text-sm font-bold hover:bg-kuzz-naranja/90 transition-colors">
+            <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            <span>Hacer nuevo pedido</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================== TOAST ====================== -->
+  <div id="toast" class="toast fixed bottom-6 left-1/2 -translate-x-1/2 z-50 px-5 py-3 rounded-full bg-kuzz-verde text-white shadow-xl flex items-center gap-2 text-sm font-bold">
+    <i data-lucide="check-circle-2" class="w-4 h-4"></i>
+    <span id="toastText">¡Agregado!</span>
+  </div>
+
+  <!-- ====================== SCRIPTS ====================== -->
+  <script>
+    // ====================== DATA ======================
+    const PRODUCTS = [
+      {
+        id: 'hlmm',
+        name: 'Hierba Luisa, Maracuyá & Menta',
+        line: 'Fórmula Insignia',
+        img: 'brand/2.jpg',
+        price: 4.50,
+        desc: 'Infusión dorada translúcida con aroma cítrico fresco y menta activada. Refrescante y digestiva.',
+      },
+      {
+        id: 'jamaica',
+        name: 'Flor de Jamaica "Tutti-Frutti"',
+        line: 'Línea Floral & Especiada',
+        img: 'brand/3.jpg',
+        price: 4.50,
+        desc: 'Rojo rubí intenso con flor de Jamaica, cáscara de piña, membrillo, canela y clavo de olor. Acidez vibrante.',
+      },
+      {
+        id: 'tenegro',
+        name: 'Té Negro con Durazno',
+        line: 'Línea Clásica',
+        img: 'brand/4.jpg',
+        price: 4.50,
+        desc: 'Té negro con cocción natural de duraznos maduros. Ámbar profundo, aterciopelado y de dulzor equilibrado.',
+      },
+      {
+        id: 'munakion',
+        name: 'Muña Andina, Naranja & Kión',
+        line: 'Línea Andina Digestiva',
+        img: 'brand/5.jpg',
+        price: 4.50,
+        desc: 'Muña andina con piel de naranja dulce y láminas de kión fresco. Ultra digestiva y revitalizante.',
+      },
+    ];
+
+    const WHATSAPP_URL = 'https://wa.me/51933844790';
+    const LS_CART_KEY = 'kuzz_cart';
+    const LS_CUSTOMER_KEY = 'kuzz_customer';
+
+    // ====================== STATE ======================
+    let cart = loadCart();
+    let customer = loadCustomer();
+
+    function loadCart() {
+      try {
+        const raw = localStorage.getItem(LS_CART_KEY);
+        return raw ? JSON.parse(raw) : {};
+      } catch { return {}; }
+    }
+    function saveCart() {
+      localStorage.setItem(LS_CART_KEY, JSON.stringify(cart));
+    }
+    function loadCustomer() {
+      try {
+        const raw = localStorage.getItem(LS_CUSTOMER_KEY);
+        return raw ? JSON.parse(raw) : { name: '', address: '', dni: '' };
+      } catch { return { name: '', address: '', dni: '' }; }
+    }
+    function saveCustomer() {
+      localStorage.setItem(LS_CUSTOMER_KEY, JSON.stringify(customer));
+    }
+
+    // ====================== RENDER PRODUCTS ======================
+    function renderProducts() {
+      const grid = document.getElementById('productsGrid');
+      grid.innerHTML = PRODUCTS.map(p => `
+        <article class="bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1 flex flex-col">
+          <div class="aspect-square overflow-hidden bg-kuzz-crema relative">
+            <img src="${p.img}" alt="${p.name}" class="w-full h-full object-cover" loading="lazy" />
+            <span class="absolute top-3 left-3 inline-flex items-center px-2.5 py-1 rounded-full bg-kuzz-verde/95 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">
+              ${p.line}
+            </span>
+          </div>
+          <div class="p-5 flex flex-col flex-1">
+            <h3 class="text-base font-extrabold text-kuzz-negro leading-tight">${p.name}</h3>
+            <p class="mt-1 text-xs text-kuzz-negro/60 font-medium flex-1">${p.desc}</p>
+            <div class="mt-3 flex items-baseline gap-1">
+              <span class="text-2xl font-black text-kuzz-verde">S/ ${p.price.toFixed(2)}</span>
+              <span class="text-xs text-kuzz-negro/50 font-medium">/ 1L</span>
+            </div>
+            <button data-add="${p.id}" class="add-btn mt-4 w-full inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-kuzz-naranja text-white text-sm font-bold shadow-lg shadow-kuzz-naranja/30 hover:bg-kuzz-naranja/90 transition-all">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span class="add-label">Agregar</span>
+            </button>
+          </div>
+        </article>
+      `).join('');
+
+      // Attach handlers
+      grid.querySelectorAll('[data-add]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const id = btn.dataset.add;
+          addToCart(id);
+          // Visual feedback
+          const label = btn.querySelector('.add-label');
+          const icon = btn.querySelector('svg');
+          const originalLabel = label.textContent;
+          const originalIconHTML = icon ? icon.outerHTML : '';
+          label.textContent = '¡Agregado!';
+          btn.classList.add('bg-kuzz-verde', 'shadow-kuzz-verde/30');
+          btn.classList.remove('bg-kuzz-naranja', 'shadow-kuzz-naranja/30');
+          if (icon) {
+            icon.outerHTML = '<i data-lucide="check" class="w-4 h-4 added-flash"></i>';
+            lucide.createIcons();
+          }
+          setTimeout(() => {
+            label.textContent = originalLabel;
+            btn.classList.remove('bg-kuzz-verde', 'shadow-kuzz-verde/30');
+            btn.classList.add('bg-kuzz-naranja', 'shadow-kuzz-naranja/30');
+            const newIcon = btn.querySelector('[data-lucide]');
+            if (newIcon) {
+              newIcon.setAttribute('data-lucide', 'plus');
+              newIcon.classList.remove('added-flash');
+              lucide.createIcons();
+            }
+          }, 1200);
+          showToast('¡Agregado al carrito!');
+        });
+      });
+
+      lucide.createIcons();
+    }
+
+    // ====================== CART OPS ======================
+    function addToCart(id) {
+      cart[id] = (cart[id] || 0) + 1;
+      saveCart();
+      bumpCartIcon();
+      renderCart();
+    }
+    function changeQty(id, delta) {
+      if (!cart[id]) return;
+      cart[id] += delta;
+      if (cart[id] <= 0) delete cart[id];
+      saveCart();
+      renderCart();
+    }
+    function removeItem(id) {
+      delete cart[id];
+      saveCart();
+      renderCart();
+    }
+    function clearCart() {
+      cart = {};
+      saveCart();
+      renderCart();
+    }
+    function cartCount() {
+      return Object.values(cart).reduce((a, b) => a + b, 0);
+    }
+    function cartTotal() {
+      let total = 0;
+      for (const id in cart) {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (p) total += p.price * cart[id];
+      }
+      return total;
+    }
+
+    // ====================== RENDER CART ======================
+    function renderCart() {
+      const count = cartCount();
+      const countEl = document.getElementById('cartCount');
+      countEl.textContent = count;
+
+      const itemsEl = document.getElementById('cartItems');
+      const emptyEl = document.getElementById('cartEmpty');
+      const footerEl = document.getElementById('cartFooter');
+      const formWrap = document.getElementById('customerFormWrap');
+
+      const ids = Object.keys(cart);
+      if (ids.length === 0) {
+        itemsEl.innerHTML = '';
+        itemsEl.classList.add('hidden');
+        emptyEl.classList.remove('hidden');
+        footerEl.classList.add('hidden');
+        formWrap.classList.add('hidden');
+      } else {
+        emptyEl.classList.add('hidden');
+        itemsEl.classList.remove('hidden');
+        footerEl.classList.remove('hidden');
+        formWrap.classList.remove('hidden');
+
+        itemsEl.innerHTML = ids.map(id => {
+          const p = PRODUCTS.find(x => x.id === id);
+          if (!p) return '';
+          const qty = cart[id];
+          const sub = p.price * qty;
+          return `
+            <div class="bg-white rounded-2xl p-3 flex gap-3 items-center shadow-sm">
+              <img src="${p.img}" alt="${p.name}" class="w-16 h-16 rounded-xl object-cover shrink-0" />
+              <div class="flex-1 min-w-0">
+                <h4 class="text-xs font-extrabold text-kuzz-negro leading-tight line-clamp-2">${p.name}</h4>
+                <p class="text-[11px] text-kuzz-negro/50 font-medium mt-0.5">1L · S/ ${p.price.toFixed(2)} c/u</p>
+                <div class="mt-2 flex items-center justify-between">
+                  <div class="inline-flex items-center rounded-full bg-kuzz-crema border border-kuzz-negro/10">
+                    <button data-dec="${id}" class="w-8 h-8 inline-flex items-center justify-center text-kuzz-negro hover:text-kuzz-naranja transition-colors" aria-label="Restar">
+                      <i data-lucide="minus" class="w-3.5 h-3.5"></i>
+                    </button>
+                    <span class="w-7 text-center text-xs font-extrabold text-kuzz-negro">${qty}</span>
+                    <button data-inc="${id}" class="w-8 h-8 inline-flex items-center justify-center text-kuzz-negro hover:text-kuzz-verde transition-colors" aria-label="Sumar">
+                      <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+                    </button>
+                  </div>
+                  <span class="text-sm font-extrabold text-kuzz-verde">S/ ${sub.toFixed(2)}</span>
+                </div>
+              </div>
+              <button data-rm="${id}" class="p-1.5 text-kuzz-negro/30 hover:text-kuzz-naranja transition-colors" aria-label="Eliminar">
+                <i data-lucide="trash-2" class="w-4 h-4"></i>
+              </button>
+            </div>
+          `;
+        }).join('');
+
+        // Attach handlers
+        itemsEl.querySelectorAll('[data-inc]').forEach(b => b.addEventListener('click', () => changeQty(b.dataset.inc, 1)));
+        itemsEl.querySelectorAll('[data-dec]').forEach(b => b.addEventListener('click', () => changeQty(b.dataset.dec, -1)));
+        itemsEl.querySelectorAll('[data-rm]').forEach(b => b.addEventListener('click', () => removeItem(b.dataset.rm)));
+      }
+
+      document.getElementById('cartTotal').textContent = `S/ ${cartTotal().toFixed(2)}`;
+      lucide.createIcons();
+      if (typeof replaceFacebookIcons === 'function') replaceFacebookIcons();
+    }
+
+    function bumpCartIcon() {
+      const el = document.getElementById('cartCount');
+      el.classList.remove('bump');
+      void el.offsetWidth;
+      el.classList.add('bump');
+    }
+
+    // ====================== DRAWER ======================
+    function openCartDrawer() {
+      const drawer = document.getElementById('cartDrawer');
+      const overlay = document.getElementById('cartOverlay');
+      const panel = document.getElementById('cartPanel');
+      drawer.classList.remove('hidden');
+      requestAnimationFrame(() => {
+        overlay.classList.add('open');
+        panel.classList.add('open');
+      });
+      document.body.style.overflow = 'hidden';
+      renderCart();
+    }
+    function closeCartDrawer() {
+      const drawer = document.getElementById('cartDrawer');
+      const overlay = document.getElementById('cartOverlay');
+      const panel = document.getElementById('cartPanel');
+      overlay.classList.remove('open');
+      panel.classList.remove('open');
+      setTimeout(() => drawer.classList.add('hidden'), 350);
+      document.body.style.overflow = '';
+    }
+
+    // ====================== CUSTOMER FORM ======================
+    function syncFormFromCustomer() {
+      document.getElementById('custName').value = customer.name || '';
+      document.getElementById('custAddress').value = customer.address || '';
+      document.getElementById('custDni').value = customer.dni || '';
+      document.getElementById('modalName').value = customer.name || '';
+      document.getElementById('modalAddress').value = customer.address || '';
+      document.getElementById('modalDni').value = customer.dni || '';
+    }
+    function readCustomerFromForm() {
+      customer.name = document.getElementById('custName').value.trim();
+      customer.address = document.getElementById('custAddress').value.trim();
+      let dni = document.getElementById('custDni').value.trim();
+      dni = dni.replace(/\D/g, '').slice(0, 8);
+      customer.dni = dni;
+      saveCustomer();
+    }
+
+    // Auto-save on input
+    ['custName', 'custAddress', 'custDni'].forEach(id => {
+      document.getElementById(id).addEventListener('input', () => {
+        readCustomerFromForm();
+        syncFormFromCustomer();
+      });
+    });
+
+    // ====================== MODAL MIS DATOS ======================
+    function openDatosModal() {
+      const modal = document.getElementById('datosModal');
+      const overlay = document.getElementById('datosOverlay');
+      modal.classList.remove('hidden');
+      requestAnimationFrame(() => overlay.classList.add('open'));
+      document.body.style.overflow = 'hidden';
+      syncFormFromCustomer();
+    }
+    function closeDatosModal() {
+      const modal = document.getElementById('datosModal');
+      const overlay = document.getElementById('datosOverlay');
+      overlay.classList.remove('open');
+      setTimeout(() => modal.classList.add('hidden'), 300);
+      document.body.style.overflow = '';
+    }
+
+    document.getElementById('btnSaveDatos').addEventListener('click', () => {
+      customer.name = document.getElementById('modalName').value.trim();
+      customer.address = document.getElementById('modalAddress').value.trim();
+      let dni = document.getElementById('modalDni').value.trim();
+      dni = dni.replace(/\D/g, '').slice(0, 8);
+      customer.dni = dni;
+      saveCustomer();
+      syncFormFromCustomer();
+      closeDatosModal();
+      showToast('Datos guardados');
+    });
+
+    // ====================== CHECKOUT / WHATSAPP ======================
+    function buildWhatsAppMessage() {
+      const nombre = customer.name || '';
+      const direccion = customer.address || '';
+      const dni = customer.dni ? customer.dni : 'No especificado';
+
+      const line = '----------------------------------------';
+      let msg = '';
+      msg += '*NUEVO PEDIDO - KUZZ INFUSIONES NATURALES*\n';
+      msg += line + '\n';
+      msg += `*Cliente:* ${nombre}\n`;
+      msg += `*Dirección:* ${direccion}\n`;
+      msg += `*DNI:* ${dni}\n`;
+      msg += line + '\n';
+      msg += '*DETALLE DEL PEDIDO:*\n';
+      for (const id in cart) {
+        const p = PRODUCTS.find(x => x.id === id);
+        if (!p) continue;
+        const qty = cart[id];
+        const sub = p.price * qty;
+        msg += `- ${qty}x ${p.name} (1L) = S/ ${sub.toFixed(2)}\n`;
+      }
+      msg += line + '\n';
+      msg += `*TOTAL A PAGAR: S/ ${cartTotal().toFixed(2)}*`;
+      return msg;
+    }
+
+    function showFormAlert(text) {
+      const box = document.getElementById('formAlert');
+      const txt = document.getElementById('formAlertText');
+      txt.textContent = text;
+      box.classList.remove('hidden');
+      setTimeout(() => box.classList.add('hidden'), 4000);
+    }
+
+    function checkout() {
+      readCustomerFromForm();
+      if (cartCount() === 0) {
+        showFormAlert('Tu carrito está vacío. Agrega al menos una botella.');
+        return;
+      }
+      if (!customer.name) {
+        showFormAlert('Completa tu nombre completo para continuar.');
+        document.getElementById('custName').focus();
+        return;
+      }
+      if (!customer.address) {
+        showFormAlert('Completa tu dirección de entrega para continuar.');
+        document.getElementById('custAddress').focus();
+        return;
+      }
+
+      const msg = buildWhatsAppMessage();
+      const url = `${WHATSAPP_URL}?text=${encodeURIComponent(msg)}`;
+
+      // Open WhatsApp
+      window.open(url, '_blank');
+
+      // Show confirmation, clear cart
+      clearCart();
+      closeCartDrawer();
+      showConfirm();
+    }
+
+    function showConfirm() {
+      const overlay = document.getElementById('confirmOverlay');
+      overlay.classList.remove('hidden');
+      requestAnimationFrame(() => overlay.classList.add('open'));
+    }
+    function hideConfirm() {
+      const overlay = document.getElementById('confirmOverlay');
+      overlay.classList.remove('open');
+      setTimeout(() => overlay.classList.add('hidden'), 300);
+    }
+
+    // ====================== TOAST ======================
+    let toastTimer;
+    function showToast(text) {
+      const toast = document.getElementById('toast');
+      const txt = document.getElementById('toastText');
+      txt.textContent = text;
+      toast.classList.add('show');
+      clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
+    }
+
+    // ====================== MOBILE MENU ======================
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      menuBtn.innerHTML = isOpen
+        ? '<i data-lucide="x" class="w-6 h-6"></i>'
+        : '<i data-lucide="menu" class="w-6 h-6"></i>';
+      lucide.createIcons();
+    });
+    mobileMenu.querySelectorAll('a, button').forEach(a => {
+      a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+        lucide.createIcons();
+      });
+    });
+
+    // ====================== EVENT BINDINGS ======================
+    document.getElementById('btnCart').addEventListener('click', openCartDrawer);
+    document.getElementById('btnCloseCart').addEventListener('click', closeCartDrawer);
+    document.getElementById('cartOverlay').addEventListener('click', closeCartDrawer);
+    document.getElementById('btnCheckout').addEventListener('click', checkout);
+    document.getElementById('btnClearCart').addEventListener('click', () => {
+      if (cartCount() === 0) return;
+      clearCart();
+      showToast('Carrito vaciado');
+    });
+    document.getElementById('btnMisDatos').addEventListener('click', openDatosModal);
+    document.getElementById('btnMisDatosMobile').addEventListener('click', openDatosModal);
+    document.getElementById('btnCloseDatos').addEventListener('click', closeDatosModal);
+    document.getElementById('datosOverlay').addEventListener('click', closeDatosModal);
+    document.getElementById('btnNewOrder').addEventListener('click', () => {
+      hideConfirm();
+    });
+
+    // ESC to close
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeCartDrawer();
+        closeDatosModal();
+        hideConfirm();
+      }
+    });
+
+    // ====================== INIT ======================
+    // Custom Facebook SVG icon (Lucide removed brand icons)
+    function replaceFacebookIcons() {
+      const facebookSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>';
+      document.querySelectorAll('[data-fb-icon]').forEach(el => {
+        if (!el.querySelector('svg')) {
+          const classes = el.getAttribute('class') || '';
+          el.classList.add('inline-flex', 'items-center', 'justify-center');
+          el.style.display = 'inline-flex';
+          el.innerHTML = facebookSvg;
+          el.querySelectorAll('svg').forEach(s => {
+            s.setAttribute('class', classes);
+          });
+        }
+      });
+    }
+
+    function init() {
+      renderProducts();
+      syncFormFromCustomer();
+      renderCart();
+      if (window.lucide) lucide.createIcons();
+      replaceFacebookIcons();
+    }
+    window.addEventListener('DOMContentLoaded', init);
+    window.addEventListener('load', () => {
+      if (window.lucide) lucide.createIcons();
+      replaceFacebookIcons();
+    });
+  </script>
+</body>
+</html>

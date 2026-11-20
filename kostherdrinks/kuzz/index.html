@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="es-PE">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="kuzz — Infusiones Naturales siempre heladas. Bebidas peruanas artesanales de 1 Litro con ingredientes reales: hierba luisa, maracuyá, flor de jamaica, té negro, muña andina y más." />
+  <meta name="theme-color" content="#0C5C38" />
+  <title>kuzz — Infusiones Naturales | Siempre Heladas</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="brand/favicon.png" />
+  <link rel="apple-touch-icon" href="brand/favicon.png" />
+
+  <!-- Google Fonts: Montserrat + Fraunces -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest" defer></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'kuzz-verde': '#0C5C38',
+            'kuzz-naranja': '#E05A10',
+            'kuzz-crema': '#F5EFEB',
+            'kuzz-negro': '#121212',
+          },
+          fontFamily: {
+            sans: ['Montserrat', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+            serif: ['Fraunces', 'ui-serif', 'Georgia', 'serif'],
+          },
+        },
+      },
+    };
+  </script>
+
+  <style>
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Montserrat', sans-serif; -webkit-font-smoothing: antialiased; }
+    .font-serif-editorial { font-family: 'Fraunces', serif; }
+
+    /* Subtle botanical pattern overlay */
+    .pattern-crema {
+      background-color: #F5EFEB;
+      background-image:
+        radial-gradient(circle at 20% 20%, rgba(12, 92, 56, 0.04) 0, transparent 30%),
+        radial-gradient(circle at 80% 70%, rgba(224, 90, 16, 0.04) 0, transparent 30%);
+    }
+
+    /* Fade-in on scroll */
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease-out, transform 0.7s ease-out; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* Hide scrollbar on horizontal scrollers if any */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+    /* Mobile menu animation */
+    .mobile-menu { max-height: 0; overflow: hidden; transition: max-height 0.35s ease-out; }
+    .mobile-menu.open { max-height: 500px; }
+  </style>
+</head>
+
+<body class="bg-kuzz-crema text-kuzz-negro antialiased">
+
+  <!-- ====================== NAVBAR STICKY ====================== -->
+  <header id="navbar" class="sticky top-0 z-50 bg-kuzz-crema/95 backdrop-blur-md border-b border-kuzz-verde/10 transition-colors duration-300">
+    <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16 sm:h-20">
+        <!-- Logo -->
+        <a href="index.html" class="flex items-center shrink-0">
+          <img src="brand/logo-oscuro.png" alt="kuzz - Infusiones Naturales" class="h-10 w-auto object-contain" />
+        </a>
+
+        <!-- Desktop nav -->
+        <div class="hidden lg:flex items-center gap-8">
+          <a href="#esencia" class="text-sm font-semibold text-kuzz-negro/80 hover:text-kuzz-verde transition-colors">Nuestra Esencia</a>
+          <a href="#sabores" class="text-sm font-semibold text-kuzz-negro/80 hover:text-kuzz-verde transition-colors">Sabores</a>
+          <a href="#beneficios" class="text-sm font-semibold text-kuzz-negro/80 hover:text-kuzz-verde transition-colors">Beneficios</a>
+        </div>
+
+        <!-- Desktop CTAs -->
+        <div class="hidden lg:flex items-center gap-3">
+          <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+             class="inline-flex items-center gap-2 px-4 py-2.5 rounded-full border border-kuzz-verde/30 text-kuzz-verde text-sm font-semibold hover:bg-kuzz-verde hover:text-white transition-colors">
+            <i data-fb-icon class="w-4 h-4"></i>
+            <span>Síguenos en Facebook</span>
+          </a>
+          <a href="store.html"
+             class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-kuzz-naranja text-white text-sm font-bold shadow-lg shadow-kuzz-naranja/30 hover:bg-kuzz-naranja/90 hover:shadow-kuzz-naranja/40 transition-all">
+            <span>Ir a la Tienda</span>
+            <i data-lucide="arrow-right" class="w-4 h-4"></i>
+          </a>
+        </div>
+
+        <!-- Mobile menu button -->
+        <button id="menuBtn" class="lg:hidden p-2 -mr-2 text-kuzz-negro" aria-label="Abrir menú" aria-expanded="false">
+          <i data-lucide="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+
+      <!-- Mobile menu -->
+      <div id="mobileMenu" class="mobile-menu lg:hidden">
+        <div class="py-4 space-y-2 border-t border-kuzz-verde/10">
+          <a href="#esencia" class="block px-2 py-3 text-sm font-semibold text-kuzz-negro/80 hover:text-kuzz-verde">Nuestra Esencia</a>
+          <a href="#sabores" class="block px-2 py-3 text-sm font-semibold text-kuzz-negro/80 hover:text-kuzz-verde">Sabores</a>
+          <a href="#beneficios" class="block px-2 py-3 text-sm font-semibold text-kuzz-negro/80 hover:text-kuzz-verde">Beneficios</a>
+          <div class="pt-3 flex flex-col gap-2">
+            <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-2 px-4 py-3 rounded-full border border-kuzz-verde/30 text-kuzz-verde text-sm font-semibold">
+              <i data-fb-icon class="w-4 h-4"></i>
+              <span>Síguenos en Facebook</span>
+            </a>
+            <a href="store.html"
+               class="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-full bg-kuzz-naranja text-white text-sm font-bold">
+              <span>Ir a la Tienda</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- ====================== HERO BANNER ====================== -->
+  <section class="relative">
+    <!-- Responsive banner image -->
+    <div class="w-full">
+      <picture>
+        <source media="(min-width: 768px)" srcset="brand/1d.jpg" />
+        <img src="brand/1m.jpg" alt="kuzz — Infusiones naturales siempre heladas" class="w-full h-auto block" />
+      </picture>
+    </div>
+
+    <!-- Editorial welcome block -->
+    <div class="relative bg-kuzz-crema">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-20">
+        <div class="max-w-3xl mx-auto text-center">
+          <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-kuzz-verde/10 text-kuzz-verde text-xs font-bold uppercase tracking-widest">
+            <i data-lucide="leaf" class="w-3.5 h-3.5"></i>
+            Infusiones Naturales del Perú
+          </span>
+          <h1 class="font-serif-editorial text-4xl sm:text-5xl lg:text-7xl font-black text-kuzz-negro mt-6 leading-[1.05]">
+            Infusiones naturales, <span class="text-kuzz-verde">siempre heladas</span>
+          </h1>
+          <p class="mt-6 text-base sm:text-lg text-kuzz-negro/70 font-medium leading-relaxed max-w-2xl mx-auto">
+            Bebidas peruanas elaboradas con hierbas frescas, frutas seleccionadas y preparación artesanal.
+            Formato ideal de 1 Litro para compartir en comidas, estudio o trabajo.
+          </p>
+          <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+            <a href="store.html"
+               class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-kuzz-naranja text-white text-sm font-bold shadow-xl shadow-kuzz-naranja/30 hover:bg-kuzz-naranja/90 hover:-translate-y-0.5 transition-all">
+              <span>Entrar a la Tienda</span>
+              <i data-lucide="arrow-right" class="w-4 h-4"></i>
+            </a>
+            <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full border-2 border-kuzz-verde text-kuzz-verde text-sm font-bold hover:bg-kuzz-verde hover:text-white transition-all">
+              <i data-fb-icon class="w-4 h-4"></i>
+              <span>Seguir en Facebook</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== PROPUESTA DE VALOR — 3 PILARES ====================== -->
+  <section id="esencia" class="py-16 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mx-auto text-center mb-12 lg:mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-widest text-kuzz-naranja">Nuestra Esencia</span>
+        <h2 class="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-black text-kuzz-negro mt-3">
+          Tres pilares que definen a kuzz
+        </h2>
+        <p class="mt-4 text-base text-kuzz-negro/70 font-medium">
+          Más que bebidas, una forma de cuidarte con ingredientes reales y procesos honestos.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <!-- Pilar 1 -->
+        <div class="reveal group bg-kuzz-crema rounded-3xl p-8 hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-2xl bg-kuzz-verde/10 flex items-center justify-center mb-6 group-hover:bg-kuzz-verde transition-colors">
+            <i data-lucide="sprout" class="w-7 h-7 text-kuzz-verde group-hover:text-white transition-colors"></i>
+          </div>
+          <h3 class="text-xl font-extrabold text-kuzz-negro mb-3">Ingredientes Reales</h3>
+          <p class="text-sm text-kuzz-negro/70 leading-relaxed">
+            Hierbas frescas y frutas seleccionadas, cero saborizantes artificiales. Cada botella lleva
+            exactamente lo que dice su etiqueta, sin atajos ni rellenos.
+          </p>
+        </div>
+
+        <!-- Pilar 2 -->
+        <div class="reveal group bg-kuzz-crema rounded-3xl p-8 hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-2xl bg-kuzz-naranja/10 flex items-center justify-center mb-6 group-hover:bg-kuzz-naranja transition-colors">
+            <i data-lucide="flame" class="w-7 h-7 text-kuzz-naranja group-hover:text-white transition-colors"></i>
+          </div>
+          <h3 class="text-xl font-extrabold text-kuzz-negro mb-3">Preparación Artesanal</h3>
+          <p class="text-sm text-kuzz-negro/70 leading-relaxed">
+            Infusión controlada para conservar los aceites esenciales naturales. Cocción lenta y embotellado
+            cuidadoso para mantener el aroma y las propiedades de cada ingrediente.
+          </p>
+        </div>
+
+        <!-- Pilar 3 -->
+        <div class="reveal group bg-kuzz-crema rounded-3xl p-8 hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1">
+          <div class="w-14 h-14 rounded-2xl bg-kuzz-verde/10 flex items-center justify-center mb-6 group-hover:bg-kuzz-verde transition-colors">
+            <i data-lucide="snowflake" class="w-7 h-7 text-kuzz-verde group-hover:text-white transition-colors"></i>
+          </div>
+          <h3 class="text-xl font-extrabold text-kuzz-negro mb-3">Siempre Helada</h3>
+          <p class="text-sm text-kuzz-negro/70 leading-relaxed">
+            Formato ideal de 1 Litro para compartir en comidas, estudio o trabajo. Servir bien fría y
+            disfrutar la frescura en cualquier momento del día.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== CATÁLOGO SENSORIAL — 4 SABORES ====================== -->
+  <section id="sabores" class="py-16 sm:py-20 lg:py-24 pattern-crema">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="max-w-2xl mx-auto text-center mb-12 lg:mb-16 reveal">
+        <span class="text-xs font-bold uppercase tracking-widest text-kuzz-naranja">Catálogo Sensorial</span>
+        <h2 class="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-black text-kuzz-negro mt-3">
+          Cuatro sabores, cuatro momentos
+        </h2>
+        <p class="mt-4 text-base text-kuzz-negro/70 font-medium">
+          Conoce cada infusión por su línea botánica, ingredientes y momento ideal de consumo.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+
+        <!-- Sabor 1 -->
+        <article class="reveal bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1 flex flex-col">
+          <div class="aspect-square overflow-hidden bg-kuzz-crema">
+            <img src="brand/2.jpg" alt="Hierba Luisa, Maracuyá y Menta" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-flex self-start items-center px-2.5 py-1 rounded-full bg-kuzz-naranja/10 text-kuzz-naranja text-[10px] font-bold uppercase tracking-wider">Fórmula Insignia</span>
+            <h3 class="mt-3 text-lg font-extrabold text-kuzz-negro leading-tight">Hierba Luisa, Maracuyá &amp; Menta</h3>
+            <p class="mt-2 text-xs text-kuzz-negro/60 font-medium">
+              Infusión dorada translúcida con aroma cítrico fresco, zumo colado de maracuyá maduro y un cogollo de menta activado en botella.
+            </p>
+            <div class="mt-4 pt-4 border-t border-kuzz-negro/5 space-y-2">
+              <div class="flex items-start gap-2">
+                <i data-lucide="leaf" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Perfil:</span> Refrescante y digestiva.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Momento:</span> Mediodía soleado y después de almuerzo.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sabor 2 -->
+        <article class="reveal bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1 flex flex-col">
+          <div class="aspect-square overflow-hidden bg-kuzz-crema">
+            <img src="brand/3.jpg" alt="Flor de Jamaica Tutti-Frutti" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-flex self-start items-center px-2.5 py-1 rounded-full bg-kuzz-verde/10 text-kuzz-verde text-[10px] font-bold uppercase tracking-wider">Línea Floral &amp; Especiada</span>
+            <h3 class="mt-3 text-lg font-extrabold text-kuzz-negro leading-tight">Flor de Jamaica "Tutti-Frutti"</h3>
+            <p class="mt-2 text-xs text-kuzz-negro/60 font-medium">
+              Bebida de tono rojo rubí intenso cocida con flor de Jamaica, cáscara de piña madura, membrillo, canela y clavo de olor.
+            </p>
+            <div class="mt-4 pt-4 border-t border-kuzz-negro/5 space-y-2">
+              <div class="flex items-start gap-2">
+                <i data-lucide="leaf" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Perfil:</span> Acidez vibrante y aroma artesanal.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Momento:</span> Tarde fresca y reuniones con amigos.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sabor 3 -->
+        <article class="reveal bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1 flex flex-col">
+          <div class="aspect-square overflow-hidden bg-kuzz-crema">
+            <img src="brand/4.jpg" alt="Té Negro con Durazno" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-flex self-start items-center px-2.5 py-1 rounded-full bg-kuzz-naranja/10 text-kuzz-naranja text-[10px] font-bold uppercase tracking-wider">Línea Clásica</span>
+            <h3 class="mt-3 text-lg font-extrabold text-kuzz-negro leading-tight">Té Negro con Durazno</h3>
+            <p class="mt-2 text-xs text-kuzz-negro/60 font-medium">
+              Infusión de hojas seleccionadas de té negro con cocción natural de duraznos maduros. Dulzor equilibrado y aterciopelado.
+            </p>
+            <div class="mt-4 pt-4 border-t border-kuzz-negro/5 space-y-2">
+              <div class="flex items-start gap-2">
+                <i data-lucide="leaf" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Perfil:</span> Ámbar profundo, aterciopelado y dulce.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Momento:</span> Sobremesa y mañanas de estudio.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Sabor 4 -->
+        <article class="reveal bg-white rounded-3xl overflow-hidden shadow-sm hover:shadow-xl hover:shadow-kuzz-verde/10 transition-all hover:-translate-y-1 flex flex-col">
+          <div class="aspect-square overflow-hidden bg-kuzz-crema">
+            <img src="brand/5.jpg" alt="Muña Andina, Naranja y Kión" class="w-full h-full object-cover" loading="lazy" />
+          </div>
+          <div class="p-6 flex flex-col flex-1">
+            <span class="inline-flex self-start items-center px-2.5 py-1 rounded-full bg-kuzz-verde/10 text-kuzz-verde text-[10px] font-bold uppercase tracking-wider">Línea Andina Digestiva</span>
+            <h3 class="mt-3 text-lg font-extrabold text-kuzz-negro leading-tight">Muña Andina, Naranja &amp; Kión</h3>
+            <p class="mt-2 text-xs text-kuzz-negro/60 font-medium">
+              Infusión herbal de muña andina aromatizada con piel de naranja dulce y láminas de kión fresco.
+            </p>
+            <div class="mt-4 pt-4 border-t border-kuzz-negro/5 space-y-2">
+              <div class="flex items-start gap-2">
+                <i data-lucide="leaf" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Perfil:</span> Ultra digestiva y revitalizante.</p>
+              </div>
+              <div class="flex items-start gap-2">
+                <i data-lucide="clock" class="w-3.5 h-3.5 text-kuzz-verde shrink-0 mt-0.5"></i>
+                <p class="text-xs text-kuzz-negro/70"><span class="font-semibold">Momento:</span> Comidas pesadas y noches de descanso.</p>
+              </div>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== BENEFICIOS ====================== -->
+  <section id="beneficios" class="py-16 sm:py-20 lg:py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div class="reveal">
+          <span class="text-xs font-bold uppercase tracking-widest text-kuzz-naranja">Por qué elegir kuzz</span>
+          <h2 class="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-black text-kuzz-negro mt-3 leading-tight">
+            Bebidas honestas para tu día a día
+          </h2>
+          <p class="mt-5 text-base text-kuzz-negro/70 font-medium leading-relaxed">
+            Cada botella de kuzz está pensada para acompañarte en los momentos que más cuidas: una comida en familia,
+            una tarde de estudio, una pausa en el trabajo. Sin aditivos ocultos, solo naturaleza embotellada.
+          </p>
+
+          <div class="mt-8 space-y-5">
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-kuzz-verde/10 flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-kuzz-verde"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-extrabold text-kuzz-negro">Sin saborizantes artificiales</h4>
+                <p class="text-xs text-kuzz-negro/60 mt-1">El sabor proviene 100% de las hierbas y frutas reales que usamos.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-kuzz-verde/10 flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-kuzz-verde"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-extrabold text-kuzz-negro">Formato práctico de 1 Litro</h4>
+                <p class="text-xs text-kuzz-negro/60 mt-1">Ideal para compartir en mesa, nevera o llevar contigo.</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-4">
+              <div class="w-10 h-10 rounded-xl bg-kuzz-verde/10 flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle-2" class="w-5 h-5 text-kuzz-verde"></i>
+              </div>
+              <div>
+                <h4 class="text-sm font-extrabold text-kuzz-negro">Producto peruano</h4>
+                <p class="text-xs text-kuzz-negro/60 mt-1">Elaborado en Perú con ingredientes de nuestra tierra.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Visual collage -->
+        <div class="reveal grid grid-cols-2 gap-4">
+          <div class="space-y-4">
+            <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-kuzz-crema">
+              <img src="brand/2.jpg" alt="Hierba Luisa, Maracuyá y Menta" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="aspect-square rounded-2xl overflow-hidden bg-kuzz-crema">
+              <img src="brand/5.jpg" alt="Muña Andina" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          </div>
+          <div class="space-y-4 pt-8">
+            <div class="aspect-square rounded-2xl overflow-hidden bg-kuzz-crema">
+              <img src="brand/3.jpg" alt="Flor de Jamaica" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="aspect-[3/4] rounded-2xl overflow-hidden bg-kuzz-crema">
+              <img src="brand/4.jpg" alt="Té Negro con Durazno" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== BANNER DE CIERRE / COMUNIDAD ====================== -->
+  <section class="bg-kuzz-verde relative overflow-hidden">
+    <!-- Decorative leaves -->
+    <div class="absolute -top-10 -right-10 opacity-10">
+      <i data-lucide="leaf" class="w-64 h-64 text-white"></i>
+    </div>
+    <div class="absolute -bottom-10 -left-10 opacity-10 rotate-180">
+      <i data-lucide="leaf" class="w-64 h-64 text-white"></i>
+    </div>
+
+    <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24 text-center">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 text-white text-xs font-bold uppercase tracking-widest">
+        <i data-lucide="users" class="w-3.5 h-3.5"></i>
+        Comunidad kuzz
+      </div>
+      <h2 class="font-serif-editorial text-3xl sm:text-4xl lg:text-5xl font-black text-white mt-6 leading-tight">
+        Únete a la comunidad kuzz
+      </h2>
+      <p class="mt-5 text-base sm:text-lg text-white/80 font-medium leading-relaxed max-w-2xl mx-auto">
+        Entérate primero de nuevos sabores, puntos de venta, recetas y promociones exclusivas.
+        Síguenos en Facebook y forma parte de la familia de infusiones naturales del Perú.
+      </p>
+
+      <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+           class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-white text-kuzz-verde text-sm font-bold shadow-xl hover:bg-white/95 hover:-translate-y-0.5 transition-all">
+          <i data-fb-icon class="w-4 h-4"></i>
+          <span>Seguir en Facebook</span>
+        </a>
+        <a href="store.html"
+           class="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full bg-kuzz-naranja text-white text-sm font-bold shadow-xl shadow-kuzz-naranja/30 hover:bg-kuzz-naranja/90 hover:-translate-y-0.5 transition-all">
+          <span>Entrar a la Tienda</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== FOOTER ====================== -->
+  <footer class="bg-kuzz-negro text-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12">
+        <!-- Brand -->
+        <div class="md:col-span-2">
+          <img src="brand/logo-claro.png" alt="kuzz - Infusiones Naturales" class="h-10 w-auto object-contain" />
+          <p class="mt-4 text-sm text-white/60 leading-relaxed max-w-md">
+            kuzz — Infusiones Naturales. Producto Peruano. Bebidas artesanales de 1 Litro elaboradas con hierbas frescas,
+            frutas seleccionadas y preparación honesta. Siempre heladas, siempre naturales.
+          </p>
+          <div class="mt-6 flex flex-wrap gap-3">
+            <a href="store.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-kuzz-naranja text-white text-sm font-bold hover:bg-kuzz-naranja/90 transition-colors">
+              <i data-lucide="shopping-bag" class="w-4 h-4"></i>
+              <span>Entrar a la Tienda</span>
+            </a>
+            <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+               class="inline-flex items-center gap-2 px-5 py-2.5 rounded-full border border-white/20 text-white text-sm font-semibold hover:bg-white/10 transition-colors">
+              <i data-fb-icon class="w-4 h-4"></i>
+              <span>Facebook</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Contacto -->
+        <div>
+          <h4 class="text-xs font-bold uppercase tracking-widest text-white/40 mb-4">Contacto</h4>
+          <ul class="space-y-3 text-sm">
+            <li>
+              <a href="https://wa.me/51933844790" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>+51 933 844 790</span>
+              </a>
+            </li>
+            <li>
+              <a href="https://www.facebook.com/kuzz.infusiones/" target="_blank" rel="noopener noreferrer"
+                 class="inline-flex items-center gap-2 text-white/80 hover:text-white transition-colors">
+                <i data-fb-icon class="w-4 h-4"></i>
+                <span>/kuzz.infusiones</span>
+              </a>
+            </li>
+            <li class="inline-flex items-center gap-2 text-white/80">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <span>Perú</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="mt-10 pt-6 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <p class="text-xs text-white/40">© 2026 kuzz — Infusiones Naturales. Producto Peruano.</p>
+        <p class="text-xs text-white/40">Hecho con ingredientes reales en Perú.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====================== SCRIPTS ====================== -->
+  <script>
+    // Mobile menu toggle
+    const menuBtn = document.getElementById('menuBtn');
+    const mobileMenu = document.getElementById('mobileMenu');
+    menuBtn.addEventListener('click', () => {
+      const isOpen = mobileMenu.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', isOpen);
+      menuBtn.innerHTML = isOpen
+        ? '<i data-lucide="x" class="w-6 h-6"></i>'
+        : '<i data-lucide="menu" class="w-6 h-6"></i>';
+      lucide.createIcons();
+    });
+
+    // Close mobile menu on link click
+    mobileMenu.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        menuBtn.setAttribute('aria-expanded', 'false');
+        menuBtn.innerHTML = '<i data-lucide="menu" class="w-6 h-6"></i>';
+        lucide.createIcons();
+      });
+    });
+
+    // Navbar shadow on scroll
+    const navbar = document.getElementById('navbar');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 10) {
+        navbar.classList.add('shadow-md', 'shadow-kuzz-verde/5');
+      } else {
+        navbar.classList.remove('shadow-md', 'shadow-kuzz-verde/5');
+      }
+    });
+
+    // Reveal on scroll
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Custom Facebook SVG icon (Lucide removed brand icons)
+    function replaceFacebookIcons() {
+      const facebookSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>';
+      document.querySelectorAll('[data-fb-icon]').forEach(el => {
+        if (!el.querySelector('svg')) {
+          const classes = el.getAttribute('class') || '';
+          el.classList.add('inline-flex', 'items-center', 'justify-center');
+          el.style.display = 'inline-flex';
+          el.innerHTML = facebookSvg;
+          el.querySelectorAll('svg').forEach(s => {
+            s.setAttribute('class', classes);
+          });
+        }
+      });
+    }
+
+    // Init Lucide icons after DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      if (window.lucide) lucide.createIcons();
+      replaceFacebookIcons();
+    });
+    window.addEventListener('load', () => {
+      if (window.lucide) lucide.createIcons();
+      replaceFacebookIcons();
+    });
+  </script>
+</body>
+</html>
